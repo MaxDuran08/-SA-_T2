@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  product-service:
+    build: ./product-service
+    ports:
+      - "8001:8000"
+    networks:
+      - shopnet
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "8002:8000"
+    networks:
+      - shopnet
+
+  payment-service:
+    build: ./payment-service
+    ports:
+      - "8003:8000"
+    networks:
+      - shopnet
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - product-service
+      - order-service
+    networks:
+      - shopnet
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - shopnet
